@@ -53,8 +53,11 @@ var circ_r = 150;
 var scale_h = 200;
 var scale_pc = 400; 
 
-var tooltip = d3.select("body")
+var tooltip = d3.select("#pca")
   .append("div")
+  .style("background-color", "rgba(163, 171, 253, 0.6)")
+  .style("font-Family", "Impact,Charcoal,sans-serif")
+  .style("background-opacity", "0.5")
   .style("position", "absolute")
   .style("visibility", "hidden")
 
@@ -91,7 +94,7 @@ var lineGraph = svg.append("path")
   .attr("opacity", "1")
   .attr("fill", "pink")
   .attr('transform', 'translate('+pos.xh+','+pos.yh+')');})
-  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i);})
+  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg.style("cursor", "pointer");})
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
