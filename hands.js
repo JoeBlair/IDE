@@ -15,13 +15,14 @@ var	yAxis = d3.svg.axis().scale(y)
 	.orient("left").ticks(5);*/
 
 var svg = d3.select("#hand").append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width - 300)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate("+ margin.left + "," + margin.top + ")");
 
+var width2 = width - 150;
 var svg2 = d3.select("#pca").append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width2)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate("+ margin.left + "," + margin.top + ")");
@@ -64,15 +65,14 @@ for (i in hand_data) {
 
   };
 
-var pos = {x: 200, y: 200, xh: 60, yh: 85};
-var circ_r = 150;
-var scale_h = 200;
-var scale_pc = 400;
+var pos = {x: 250, y: 230, xh: 60, yh: 85};
+var circ_r = 200;
+var scale_h = width/3;
 
 	// Scale the range of the data
 
   var xValue = function(d) { return d[0];}, // data -> value
-    xScale = d3.scale.linear().range([0, width]), // value -> display
+    xScale = d3.scale.linear().range([0, width2]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
@@ -93,15 +93,25 @@ yScale.domain([-0.5, d3.max(pca_hands, function(d) { return d[1]; })]);
 svg2.append("g")
 		.attr("class", "x axis")
 		.attr("transform", 'translate(0, '+ height +')')
-		.call(xAxis);
+		.call(xAxis)
+    .append("text")
+    .attr("class", "label")
+    .attr("x", width2 - 40)
+    .attr("y", -6)
+    .style("text-anchor", "end")
+    .text("PC1");
 
 	// Add the Y Axis
 svg2.append("g")
 		.attr("class", "y axis")
-	
-		// "rotate(-90)"
-		.call(yAxis); 
-
+		.call(yAxis)
+    .append("text")
+    .attr("class", "label")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text("PC2");
 var tooltip = d3.select("#pca")
   .append("div")
   .style("background-color", "rgba(163, 171, 253, 0.6)")
@@ -111,7 +121,7 @@ var tooltip = d3.select("#pca")
   .style("visibility", "hidden")
 
 svg.append('circle')
-    .attr("r", circ_r)
+    .attr("r", width/4)
     .attr("stroke", "black")
     .attr("fill", "white")
     .attr('transform', 'translate('+pos.x+','+pos.y+')');
@@ -124,11 +134,11 @@ svg.append('circle')
   .attr("cy", yMap)
 /*  .attr('cx',function(d){return d[0]*scale_pc;})
   .attr('cy',function(d){return d[1]*scale_pc;})*/
-  .attr('r',2)
+  .attr('r', 4)
   // .attr('transform', 'translate(0, '+ height+')')
   .on('click', function(d, i) {
   svg.append('circle')
-    .attr("r", circ_r)
+    .attr("r", width/4)
     .attr("stroke", "black")
     .attr("fill", "white")
     .attr('transform', 'translate('+pos.x+','+pos.y+')');
@@ -144,7 +154,7 @@ var lineGraph = svg.append("path")
   .attr("stroke-width", 1)
   .attr("opacity", "1")
   .attr("fill", "pink")
-  .attr('transform', 'translate('+pos.xh+','+pos.yh+')');})
+  .attr('transform', 'translate('+(pos.x/4-15)+','+pos.y/4+')');})
   .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg2.style("cursor", "pointer");})
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
