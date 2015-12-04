@@ -83,10 +83,11 @@ var yValue = function(d) { return d[1];}, // data -> value
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 /*x.domain(d3.extent(pca_hands, function(d) { return d[0]*scale_pc; }));
 y.domain([d3.min(pca_hands, function(d) { return d[1]*scale_pc; }), d3.max(pca_hands, function(d) { return d[1]*scale_pc; })]);*/
-xScale.domain(d3.extent(pca_hands, function(d) { return d[0]; }));
-yScale.domain([d3.min(pca_hands, function(d) { return d[1]; }), d3.max(pca_hands, function(d) { return d[1]; })]);
+xScale.domain([-0.5,0.7]);
+yScale.domain([-0.5, d3.max(pca_hands, function(d) { return d[1]; })]);
 
-
+// d3.extent(pca_hands, function(d) { return d[0]; })
+// d3.min(pca_hands, function(d) { return d[1]; })
 
 	// Add the X Axis
 svg2.append("g")
@@ -144,7 +145,7 @@ var lineGraph = svg.append("path")
   .attr("opacity", "1")
   .attr("fill", "pink")
   .attr('transform', 'translate('+pos.xh+','+pos.yh+')');})
-  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg.style("cursor", "pointer");})
+  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg2.style("cursor", "pointer");})
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
