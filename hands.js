@@ -41,7 +41,7 @@ for (i in hand_data) {
 
 };
 
-
+console.log(hands);
 
 var pc = [1,2];
 
@@ -55,14 +55,14 @@ var scale_h = width/3;
 
   var xValue = function(d) { return d;}, // data -> value
     xScale = d3.scale.linear()
-        .domain([d3.min(pca_hands, function(d) { return d[0]-0.05; }),d3.max(pca_hands, function(d) { return d[0]; })])
+        .domain([d3.min(pca_hands, function(d) { return d[0]; })/0.8,d3.max(pca_hands, function(d) { return d[0]; })*1.2])
         .range([0, width2]), // value -> display
     xMap = function(d) { return xScale(xValue(d[0]));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 // setup y
 var yValue = function(d) { return d;}, // data -> value
     yScale = d3.scale.linear()
-        .domain([d3.min(pca_hands, function(d) { return d[1]-0.05; }), d3.max(pca_hands, function(d) { return d[1]; })])
+        .domain([d3.min(pca_hands, function(d) { return d[1]; })/0.8, d3.max(pca_hands, function(d) { return d[1]; })*1.2])
         .range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d[1]));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -120,7 +120,7 @@ var handy = svg.append("g")
       .attr("fill", "pink")
       .attr('transform', 'translate('+(pos.x/4-15)+','+pos.y/4+')');
 
-  points = svg2.selectAll('circle')
+var points = svg2.selectAll('circle')
   .data(pca_hands)
   .enter()
   .append('circle')
@@ -129,20 +129,18 @@ var handy = svg.append("g")
   .attr('r', 4)
   .on('click', function(d, i) {
   handy
-    .attr("d", lineFn(hands[i]))
     .transition()
-    .duration(100);})
+    .duration(1250)
+      .attr("d", lineFn(hands[i]));})
   .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg2.style("cursor", "pointer");})
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
-  document.getElementById("button").addEventListener('click', function () {
-    var input1 = document.getElementById("pcx").value;
-    var input2 = document.getElementById("pcy").value;
+function new_pca(input1,input2) {
     var pc = [input1,input2];
     var pca_hands = d3.zip(hand_pca_data[pc[0]-1],hand_pca_data[pc[1]-1]);
-    xScale.domain([d3.min(pca_hands, function(d) { return d[0]-0.05; }),d3.max(pca_hands, function(d) { return d[0]; })]);
-    yScale.domain([d3.min(pca_hands, function(d) { return d[1]-0.05; }), d3.max(pca_hands, function(d) { return d[1]; })]);
+    xScale.domain([d3.min(pca_hands, function(d) { return d[0]; })/0.8,d3.max(pca_hands, function(d) { return d[0]; })*1.2]);
+    yScale.domain([d3.min(pca_hands, function(d) { return d[1]; })/0.8, d3.max(pca_hands, function(d) { return d[1]; })*1.2]);
     svg2.selectAll('circle')
         .data(pca_hands)
         .transition()
@@ -163,6 +161,142 @@ var handy = svg.append("g")
         .call(yAxis);
     svg2.select(".ylabel")
         .text("PC"+pc[1]);
+}
+
+    d3.select("#outlier")
+
+        .on("mouseover",   function(){
+            new_pca(1,2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(39===i) return 6;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(39===i) return 'red';
+                    else return 'black';
+                });
+        })
+        .on("mouseout",  function () {
+                var input1 = document.getElementById("pcx").value;
+                var input2 = document.getElementById("pcy").value;
+                new_pca(input1,input2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(39===i) return 4;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(39===i) return 'black';
+                });
+        });
+
+  document.getElementById("button").addEventListener('click', function () {
+    var input1 = document.getElementById("pcx").value;
+    var input2 = document.getElementById("pcy").value;
+    new_pca(input1,input2);
+});
+
+    function calendarWeekHour(id, width, height, square, points)
+    {
+
+        var grid = d3.select(id).append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "chart");
+
+        var calData = randomData(width, height, square, grid);
+
+        var row = grid.selectAll(".row")
+            .data(calData)
+            .enter().append("svg:g")
+            .attr("class", "row");
+
+        var col = row.selectAll(".cell")
+            .data(function (d) { return d; })
+            .enter().append("svg:rect")
+            .attr("class", "cell")
+            .attr("x", function(d) { return d.x; })
+            .attr("y", function(d) { return d.y; })
+            .attr("width", function(d) { return d.width; })
+            .attr("height", function(d) { return d.height; })
+            .style("fill", '#FFF')
+            .style("stroke", '#555');
+        randomData(width, height, square, grid, points);
+
+    }
+
+
+    function randomData(gridWidth, gridHeight, square, grid, points)
+    {
+        var data = new Array();
+        var gridItemWidth = gridWidth / 25;
+        var gridItemHeight = (square) ? gridItemWidth : gridHeight;
+        console.log(gridItemHeight);
+        var startX = gridItemWidth / 2;
+        var startY = gridItemHeight / 2;
+        var stepX = gridItemWidth;
+        var stepY = gridItemHeight;
+        var xpos = startX;
+        var ypos = startY;
+        var count = 0;
+        var lineFn = d3.svg.line()
+            .x(function(d) { return d[0]*55; })
+            .y(function(d) { return d[1]*55; })
+            .interpolate("basis");
+        for (var index_a = 0; index_a < 2; index_a++)
+        {
+            data.push(new Array());
+            for (var index_b = 0; index_b < 20; index_b++)
+            {
+
+                data[index_a].push({
+                    width: gridItemWidth,
+                    height: gridItemHeight,
+                    x: xpos,
+                    y: ypos,
+                    count: count
+                });
+                grid.append("g")
+                    .append("path")
+                    .attr("d", lineFn(hands[count]))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1)
+                    .attr("opacity", "1")
+                    .attr("fill", "pink")
+                    .attr("id", count)
+                    .attr('transform', 'translate('+(xpos)+','+ypos+')')
+                    .on('mouseover', function() {
+                        d3.select(this)
+                            .style('fill', 'black');
+                    })
+                    .on('mouseout', function() {
+                        d3.select(this)
+                            .style('fill', 'pink');
+                    })
+                    .on('click', function() {
+                        ind = +this.id;
+                        svg2.selectAll('circle')
+                            .attr("r", function(d,i){
+                                if(ind===i) return 6;
+                                else return 4;
+                            })
+                            .style('fill',function(d,i){
+                                if(ind===i) return 'red';
+                                else return 'black';
+                            });
+                    });
+                xpos += stepX;
+                count += 1;
+            }
+            xpos = startX;
+            ypos += stepY;
+        }
+        return data;
+    }
+    calendarWeekHour('#all_hands', 1800, 200, true, points);
+
+
 });
 });
-});
+
