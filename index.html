@@ -2,41 +2,101 @@
 <html lang="en">
   <head>
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="http://harthur.github.io/clusterfck/demos/colors/clusterfck.js" charset="utf-8"></script>
-    <script src="concaveHull.js" charset="utf-8" type="text/javascript"></script>
-
-
+      <script src="http://harthur.github.io/clusterfck/demos/colors/clusterfck.js" charset="utf-8"></script>
     <meta charset="utf-8">
+
     <title>Assignment 3: Hands on PCA</title>
     <link rel="stylesheet" href="hands.css">
   </head>
   <body>
   <div id="header">
     <h1>Assignment 3: Hands on PCA</h1>
-      <h3>Jose Juan Almagro Armenteros</h3>
-      <h3>Joseph Blair</h3>
-      <h3>Juan Salamanca Viloria</h3>
+      <h3>Jose Juan Almagro Armenteros, Joseph Blair & Juan Salamanca Viloria</h3>
+      
   </div>
   <div id="nav" >
-      <button><a href = "#Motivation">Motivation</a> </button>
-      <button><a href = "#Methods">Methods</a> </button>
-      <button><a href = "#Results">Results and discussion</a> </button>
-      <button><a href = "#indv">Individual part</a> </button>
+      <a href = "#introduction" class="myButton"> Introduction</a> 
+      <a href = "#instructions" class="myButton">Instructions</a> 
+      <a href = "#discussion" class="myButton">Discussion</a> 
+      <a href = "#cont" class="myButton">Contribution</a> 
+
   </div>
   <div id="section">
+    <h1 id = "introduction" >Introduction</h1>
+    <p>
+      Principal Component analysis is a statistical technique used to reduce the number of independent variables in a dataset, helping identify patterns in a data set.  The “principal components” are a linear combination of the original variables sorted by the variance, where the first principal component has the largest variance. It has been coined one of the most useful methods to have come out of linear algebra. If you are interested in a statistical overview of this method, you can read more<a href = "http://www.real-statistics.com/multivariate-statistics/factor-analysis/principal-component-analysis/"> here. </a></p>
+
+<p>Below is a in interactive visualisation which has been built using a 112 dimension data set, containing 40 points. This high dimensional data contains information on the outline of a hand. As mentioned previously, PCA is often used to reduce the number of independent variables, which can allow for visualisation on a 2D screen. Using the hand data set, PCA was performed with a python library, Sci-Kit-Learn, to reduce the dimensionality and allow for analysis. As the first principle component (PC) contains the information with the most variance, this were plotted against the second PC, which contains second highest variance. Following the PCA, 40 dimensions were generated, with the 40th containing the least variance of them all. You can try plotting different principle components against each other below. </p>
+
+<p>It is also interesting to see which points have similar values and can be naturally grouped together. This can be done by analysing the graph by eye, or using statistical clustering methods. In this case, K-means clustering was used to identify points, or hands, are similar to each other. K-means clustering partitions n observations into k clusters, aiming to minimise the variance between each cluster. The mathematical techniques this employees can be read in more detail <a href = "https://en.wikipedia.org/wiki/K-means_clustering" > here. </a></p>
+<h1 id = "instructions">Visualisation Instructions</h1>
+<p>
+Use the blow visualisation to gain a better understanding of PCA. The graph shows the first two principle components plotted against one another. Using the input on the left, you can change which components are displayed to visualise the variance between different components. Once you have chosen which components you would like to visualise, by clicking the plotted points, the hand on the right will update with the corresponding hand. 
+
+In order to facilitate the analysis of the points, and to identify clusters, you can use K-Means clustering by selecting a k value (number of clusters) and clicking “add clusters”. Please note, clusters of size 2 and below will not be visualised. 
+
+By hovering over a hand in the grid at the bottom of the visualisation, a point in the graph will be highlighted which corresponds to that hand. 
+
+If you find text hightlighted in red at any part of the webpage, by hovering over, the graph will be updated and display some related information.
+</p>
     <p>PC
       <input id="pcx" value="1" />
         PC
       <input id="pcy" value="2" /><input type="button" value="Update PCA" id="button">
+      Generate cluster with k=<input id="km" value="3" /><input type="button" value="Add clusters" id="button1">
     </p>
-
+      <p>
+         
+      </p>
     <div id="plot">
      <div id="hand"></div>
-     <div id="pca">
-
-     </div>
-        <script src="hands.js"></script>
+     <div id="pca"></div>
+        <div id="all_hands"></div>
     </div>
+    <H1 id = "discussion">Discussion</H1>
+    <p>
+      In order to understand better the PCA it will be useful to play with the different principal components on the visualization, this will give us a better idea of how to interpret the data.</p>
+      <p>
+        For instance, when comparing the PC1 against PC2 we can get an overview of which feature correspond (is linked) to each one. If we take a look on one of the outliers, such as the <a id = "outlier"> <font color="red">hand 39</font></a>, it can be seen when is compared to others that the PC1 contains the information about the distance between the thumb and the little finger. (Compare <a id = "outlier2"><font color="red">hand 30</font></a> against <a id = "outlier3"><font color="red">hand 35</font></a>). Moreover, the PC2 it seems to have the information related to distance between the little and the ring finger (compare hand 39  against <a id = "outlier4"><font color="red">hand 37</font></a>).
+
+      </p>
+      <p>
+        Using k means clustering it’s possible to identify points with little variance in the components.
+In this particular dataset as the variance is limited by the movement of the hand, there are no clearly defined clusters which can be found. By using a high k value is easier to identify similar points. 
+
+      </p>
+      <h2 id = "cont">Contributors</h2>
+      <p>
+        The contributors of this project were:
+        <li>Jose Juan Almagros</li>
+           <ul><li type="circle">Support changing which two PCA-variables are displayed in panel two (preferably with a nice transition).
+          </li>
+            <li type="circle">Display multiple hand-outlines and highlight the corresponding PCA-coordinates when one is selected
+          </li>
+           <li type="circle"> Add coloring based on K-means clustering (use e.g. clusterfck)</li>
+          </ul>
+          <li>Juan Salamanca Viloria</li>
+           <ul><li type="circle">Connect a piece of text in the discussion with the visualization. For example, when the mouse hovers over the discussion about an outlier, then the outlier gets highlighed in the visualization.
+          </li>
+          </ul>
+          <li>Joe Blair</li>
+           <ul><li type="circle">Display the datafile row index as a text-label or a tooltip when the mouse hovers over its point in the PCA panel.
+
+         
+          <li type="circle">Add coloring based on K-means clustering (use e.g. clusterfck)
+          </li>
+          </ul>
+
+
+
+      </p>
+
+
+      <script src="hands.js"></script>
+
   </div>
+
+
   </body>
+
 </html>
