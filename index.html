@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="http://harthur.github.io/clusterfck/demos/colors/clusterfck.js" charset="utf-8"></script>
+      <script src="concaveHull.js" charset="utf-8" type="text/javascript"></script>
     <meta charset="utf-8">
+
     <title>Assignment 3: Hands on PCA</title>
     <link rel="stylesheet" href="hands.css">
   </head>
@@ -25,18 +28,17 @@
         PC
       <input id="pcy" value="2" /><input type="button" value="Update PCA" id="button">
     </p>
-
+      <p>
+         Generate cluster with k=<input id="km" value="3" /><input type="button" value="Add clusters" id="button1">
+      </p>
     <div id="plot">
      <div id="hand"></div>
      <div id="pca"></div>
         <div id="all_hands"></div>
-        <p>
-            <a id = "outlier"> change the outlier 39  </a> jfbvsbvkjsbdvjbsdjv
-            <!-- <a onmouseover="setCol(39)" onmouseout="setCol2(39)"> change the outlier 39  </a> jfbvsbvkjsbdvjbsdjv -->
-
-
-        </p>
     </div>
+      <p>
+          <a id = "outlier"> change the outlier 39  </a> jfbvsbvkjsbdvjbsdjv
+      </p>
       <script src="hands.js"></script>
   </div>
   </body>

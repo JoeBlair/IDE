@@ -41,7 +41,6 @@ for (i in hand_data) {
 
 };
 
-console.log(hands);
 
 var pc = [1,2];
 
@@ -66,8 +65,6 @@ var yValue = function(d) { return d;}, // data -> value
         .range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d[1]));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
-
-
 
 	// Add the X Axis
 svg2.append("g")
@@ -136,11 +133,43 @@ var points = svg2.selectAll('circle')
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
+    function new_cluster (data, figure, k, trans) {
+        var scaledX = data.map(function(d){return xMap(d);});
+        var scaledY = data.map(function(d){return yMap(d);});
+
+        var scaleD  = d3.zip(scaledX, scaledY);
+
+        var clusters = clusterfck.kmeans(scaleD, k);
+
+        var colors = ["red", "green", "blue", "orange", "yellow", "purple", "grey", "brown"];
+        if (trans == "new") {
+            figure.selectAll("path").remove();
+        }
+        for (e = 0; e < k; e++) {
+            figure.append("g")
+                .selectAll("path")
+                .data(d3.geom.delaunay(clusters[e]))
+                .enter().append("path")
+                .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+                .attr("id", e)
+                .style("fill", colors[e])
+                .style("opacity", 0.2);
+        }
+
+        svg2.selectAll("path")
+            .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + (+this.id+1)), figure.style("cursor", "pointer");})
+            .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+            .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+    }
+
+
+
 function new_pca(input1,input2) {
     var pc = [input1,input2];
     var pca_hands = d3.zip(hand_pca_data[pc[0]-1],hand_pca_data[pc[1]-1]);
     xScale.domain([d3.min(pca_hands, function(d) { return d[0]; })/0.8,d3.max(pca_hands, function(d) { return d[0]; })*1.2]);
     yScale.domain([d3.min(pca_hands, function(d) { return d[1]; })/0.8, d3.max(pca_hands, function(d) { return d[1]; })*1.2]);
+
     svg2.selectAll('circle')
         .data(pca_hands)
         .transition()
@@ -161,11 +190,14 @@ function new_pca(input1,input2) {
         .call(yAxis);
     svg2.select(".ylabel")
         .text("PC"+pc[1]);
+
+    return pca_hands;
 }
 
     d3.select("#outlier")
 
         .on("mouseover",   function(){
+            svg2.selectAll("path").remove();
             new_pca(1,2);
             svg2.selectAll('circle')
                 .attr("r", function(d,i){
@@ -174,12 +206,13 @@ function new_pca(input1,input2) {
                 })
                 .style('fill',function(d,i){
                     if(39===i) return 'red';
-                    else return 'black';
+                    else return 'white';
                 });
         })
         .on("mouseout",  function () {
                 var input1 = document.getElementById("pcx").value;
                 var input2 = document.getElementById("pcy").value;
+                 svg2.selectAll("path").remove();
                 new_pca(input1,input2);
             svg2.selectAll('circle')
                 .attr("r", function(d,i){
@@ -187,14 +220,32 @@ function new_pca(input1,input2) {
                     else return 4;
                 })
                 .style('fill',function(d,i){
-                    if(39===i) return 'black';
+                    if(39===i) return 'white';
                 });
+        });
+
+    document.getElementById("button1").addEventListener('click', function () {
+        var k = document.getElementById("km").value;
+        var input1 = document.getElementById("pcx").value;
+        var input2 = document.getElementById("pcy").value;
+        var pca_hands_up = new_pca(input1,input2);
+        new_cluster(pca_hands_up, svg2, k, "new");
+        d3.selection.prototype.moveToFront = function() {
+            return this.each(function(){
+                this.parentNode.appendChild(this);
+            });
+        };
+        var el = svg2.selectAll('circle');
+        el.moveToFront();
+        pca_hands_up = new_pca(input1,input2);
         });
 
   document.getElementById("button").addEventListener('click', function () {
     var input1 = document.getElementById("pcx").value;
     var input2 = document.getElementById("pcy").value;
+      svg2.selectAll("path").remove();
     new_pca(input1,input2);
+
 });
 
     function calendarWeekHour(id, width, height, square, points)
@@ -232,7 +283,6 @@ function new_pca(input1,input2) {
         var data = new Array();
         var gridItemWidth = gridWidth / 25;
         var gridItemHeight = (square) ? gridItemWidth : gridHeight;
-        console.log(gridItemHeight);
         var startX = gridItemWidth / 2;
         var startY = gridItemHeight / 2;
         var stepX = gridItemWidth;
@@ -269,12 +319,6 @@ function new_pca(input1,input2) {
                     .on('mouseover', function() {
                         d3.select(this)
                             .style('fill', 'black');
-                    })
-                    .on('mouseout', function() {
-                        d3.select(this)
-                            .style('fill', 'pink');
-                    })
-                    .on('click', function() {
                         ind = +this.id;
                         svg2.selectAll('circle')
                             .attr("r", function(d,i){
@@ -283,9 +327,22 @@ function new_pca(input1,input2) {
                             })
                             .style('fill',function(d,i){
                                 if(ind===i) return 'red';
-                                else return 'black';
+                                else return 'white';
                             });
-                    });
+                    })
+                    .on('mouseout', function() {
+                        d3.select(this)
+                            .style('fill', 'pink');
+                        ind = +this.id;
+                        svg2.selectAll('circle')
+                            .attr("r", function(d,i){
+                                if(ind===i) return 4;
+                                else return 4;
+                            })
+                            .style('fill',function(d,i){
+                                if(ind===i) return 'white';
+                            });
+                    })
                 xpos += stepX;
                 count += 1;
             }
