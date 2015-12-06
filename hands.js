@@ -103,7 +103,7 @@ var scaleD  = d3.zip(scaledX, scaledY)
 var clusters = clusterfck.kmeans(scaleD, 3);
 
 
-svg2.append("g")
+clust1 = svg2.append("g")
   .selectAll("path")
     .data(d3.geom.delaunay(clusters[0]))
   .enter().append("path")
@@ -115,7 +115,7 @@ svg2.append("g")
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
 
 
-svg2.append("g")
+clust2 = svg2.append("g")
   .selectAll("path")
     .data(d3.geom.delaunay(clusters[1]))
   .enter().append("path")
@@ -177,7 +177,7 @@ var handy = svg.append("g")
   .attr("cx", xMap)
   .attr("cy", yMap)
   .attr('r', 4)
-  .style("fill", "white")
+  .style("fill", "black")
   .on('click', function(d, i) {
   handy
     .transition()
@@ -212,7 +212,47 @@ var scaledY = pca_hands.map(function(d){return yMap(d);})
 var scaleD  = d3.zip(scaledX, scaledY)
 
 var clusters = clusterfck.kmeans(scaleD, 3);
-console.log(clusters)
+
+clust1.remove()
+clust2.remove()
+clust3.remove()
+
+clust1 = svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[0]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "red")
+    .style("opacity", 0.2)
+
+  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 1), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+
+clust2 = svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[1]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "green")
+        .style("opacity", 0.2)
+  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 2), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+
+clust3 = svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[2]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "blue")
+        .style("opacity", 0.2)
+     .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 3), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
 
 d3.select("path")
   .data(clusters[2])
