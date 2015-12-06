@@ -143,13 +143,14 @@ var points = svg2.selectAll('circle')
 
         var colors = ["red", "green", "blue", "orange", "yellow", "purple", "grey", "brown"];
         if (trans == "new") {
-            figure.selectAll("path").remove();
+            figure.selectAll(".cluster").remove();
         }
         for (e = 0; e < k; e++) {
             figure.append("g")
                 .selectAll("path")
                 .data(d3.geom.delaunay(clusters[e]))
                 .enter().append("path")
+                .attr("class", "cluster")
                 .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
                 .attr("id", e)
                 .style("fill", colors[e])
@@ -197,7 +198,7 @@ function new_pca(input1,input2) {
     d3.select("#outlier")
 
         .on("mouseover",   function(){
-            svg2.selectAll("path").remove();
+            svg2.selectAll(".cluster").remove();
             new_pca(1,2);
             svg2.selectAll('circle')
                 .attr("r", function(d,i){
@@ -212,7 +213,7 @@ function new_pca(input1,input2) {
         .on("mouseout",  function () {
                 var input1 = document.getElementById("pcx").value;
                 var input2 = document.getElementById("pcy").value;
-                 svg2.selectAll("path").remove();
+                 svg2.selectAll(".cluster").remove();
                 new_pca(input1,input2);
             svg2.selectAll('circle')
                 .attr("r", function(d,i){
@@ -237,13 +238,12 @@ function new_pca(input1,input2) {
         };
         var el = svg2.selectAll('circle');
         el.moveToFront();
-        pca_hands_up = new_pca(input1,input2);
         });
 
   document.getElementById("button").addEventListener('click', function () {
     var input1 = document.getElementById("pcx").value;
     var input2 = document.getElementById("pcy").value;
-      svg2.selectAll("path").remove();
+      svg2.selectAll(".cluster").remove();
     new_pca(input1,input2);
 
 });
