@@ -1,4 +1,3 @@
-
 var margin = {top:20 , right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -50,7 +49,7 @@ var pos = {x: 250, y: 230, xh: 60, yh: 85};
 var circ_r = 200;
 var scale_h = width/3;
 
-	// Scale the range of the data
+  // Scale the range of the data
 
   var xValue = function(d) { return d;}, // data -> value
     xScale = d3.scale.linear()
@@ -66,11 +65,11 @@ var yValue = function(d) { return d;}, // data -> value
     yMap = function(d) { return yScale(yValue(d[1]));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-	// Add the X Axis
+  // Add the X Axis
 svg2.append("g")
-		.attr("class", "x_axis")
-		.attr("transform", 'translate(0, '+ height +')')
-		.call(xAxis);
+    .attr("class", "x_axis")
+    .attr("transform", 'translate(0, '+ height +')')
+    .call(xAxis);
     svg2.append("text")
     .attr("class", "xlabel")
     .attr("x", width2 - 40)
@@ -78,10 +77,10 @@ svg2.append("g")
     .style("text-anchor", "end")
     .text("PC"+pc[0]);
 
-	// Add the Y Axis
+  // Add the Y Axis
 svg2.append("g")
-		.attr("class", "y_axis")
-		.call(yAxis);
+    .attr("class", "y_axis")
+    .call(yAxis);
   svg2.append("text")
     .attr("class", "ylabel")
     .attr("transform", "rotate(-90)")
@@ -93,7 +92,7 @@ svg2.append("g")
 var tooltip = d3.select("#pca")
   .append("div")
   .style("background-color", "rgba(163, 171, 253, 0.6)")
-  .style("font-Family", "Impact,Charcoal,sans-serif")
+  .style("font-Family", "")
   .style("background-opacity", "0.5")
   .style("position", "absolute")
   .style("visibility", "hidden");
@@ -114,7 +113,7 @@ var handy = svg.append("g")
       .attr("stroke", "black")
       .attr("stroke-width", 1)
       .attr("opacity", "1")
-      .attr("fill", "pink")
+      .attr("fill", "rgba(255,228, 196, 0.6)")
       .attr('transform', 'translate('+(pos.x/4-15)+','+pos.y/4+')');
 
 var points = svg2.selectAll('circle')
@@ -225,6 +224,97 @@ function new_pca(input1,input2) {
                 });
         });
 
+    d3.select("#outlier2")
+
+        .on("mouseover",   function(){
+            svg2.selectAll(".cluster").remove();
+            new_pca(1,2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(30===i) return 6;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(30===i) return 'red';
+                    else return 'white';
+                });
+        })
+        .on("mouseout",  function () {
+                var input1 = document.getElementById("pcx").value;
+                var input2 = document.getElementById("pcy").value;
+                 svg2.selectAll(".cluster").remove();
+                new_pca(input1,input2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(30===i) return 4;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(30===i) return 'white';
+                });
+        });
+
+            d3.select("#outlier3")
+
+        .on("mouseover",   function(){
+            svg2.selectAll(".cluster").remove();
+            new_pca(1,2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(35===i) return 6;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(35===i) return 'red';
+                    else return 'white';
+                });
+        })
+        .on("mouseout",  function () {
+                var input1 = document.getElementById("pcx").value;
+                var input2 = document.getElementById("pcy").value;
+                 svg2.selectAll(".cluster").remove();
+                new_pca(input1,input2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(35===i) return 4;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(35===i) return 'white';
+                });
+        });
+
+            d3.select("#outlier4")
+
+        .on("mouseover",   function(){
+            svg2.selectAll(".cluster").remove();
+            new_pca(1,2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(37===i) return 6;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(37===i) return 'red';
+                    else return 'white';
+                });
+        })
+        .on("mouseout",  function () {
+                var input1 = document.getElementById("pcx").value;
+                var input2 = document.getElementById("pcy").value;
+                 svg2.selectAll(".cluster").remove();
+                new_pca(input1,input2);
+            svg2.selectAll('circle')
+                .attr("r", function(d,i){
+                    if(37===i) return 4;
+                    else return 4;
+                })
+                .style('fill',function(d,i){
+                    if(37===i) return 'white';
+                });
+        });
+
+
     document.getElementById("button1").addEventListener('click', function () {
         var k = document.getElementById("km").value;
         var input1 = document.getElementById("pcx").value;
@@ -313,12 +403,12 @@ function new_pca(input1,input2) {
                     .attr("stroke", "black")
                     .attr("stroke-width", 1)
                     .attr("opacity", "1")
-                    .attr("fill", "pink")
+                    .attr("fill", "rgba(255,228, 196, 0.6)")
                     .attr("id", count)
                     .attr('transform', 'translate('+(xpos)+','+ypos+')')
                     .on('mouseover', function() {
                         d3.select(this)
-                            .style('fill', 'black');
+                            .style('fill', "black");
                         ind = +this.id;
                         svg2.selectAll('circle')
                             .attr("r", function(d,i){
@@ -332,7 +422,7 @@ function new_pca(input1,input2) {
                     })
                     .on('mouseout', function() {
                         d3.select(this)
-                            .style('fill', 'pink');
+                            .style("fill", "rgba(255,228, 196, 0.6)");
                         ind = +this.id;
                         svg2.selectAll('circle')
                             .attr("r", function(d,i){
@@ -356,4 +446,3 @@ function new_pca(input1,input2) {
 
 });
 });
-
