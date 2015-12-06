@@ -67,3 +67,21 @@ button {
 #hand, #pca {
   float: left;
 }
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.hull {
+  fill: steelblue;
+  stroke: steelblue;
+  stroke-width: 30px;
+  stroke-linejoin: round
+  ;
+}
+
+circle {
+  fill: white;
+  stroke: black;
+  stroke-width: 1.5px;
+}

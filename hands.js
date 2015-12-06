@@ -93,6 +93,54 @@ svg2.append("g")
     .style("text-anchor", "end")
     .text("PC"+pc[1]);
 
+
+
+var scaledX = pca_hands.map(function(d){return xMap(d);}) 
+var scaledY = pca_hands.map(function(d){return yMap(d);}) 
+
+var scaleD  = d3.zip(scaledX, scaledY)
+
+var clusters = clusterfck.kmeans(scaleD, 3);
+
+
+svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[0]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "red")
+    .style("opacity", 0.2)
+     .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 1), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+
+svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[1]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "green")
+        .style("opacity", 0.2)
+
+     .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 2), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+
+clust3 = svg2.append("g")
+  .selectAll("path")
+    .data(d3.geom.delaunay(clusters[2]))
+  .enter().append("path")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+    .style("fill", "blue")
+        .style("opacity", 0.2)
+     .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Cluster: " + 3), svg2.style("cursor", "pointer");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+
+
 var tooltip = d3.select("#pca")
   .append("div")
   .style("background-color", "rgba(163, 171, 253, 0.6)")
@@ -117,8 +165,10 @@ var handy = svg.append("g")
       .attr("stroke", "black")
       .attr("stroke-width", 1)
       .attr("opacity", "1")
-      .attr("fill", "pink")
+
+      .attr("fill", "rgba(238, 203, 173, 0.6)")
       .attr('transform', 'translate('+(pos.x/4-15)+','+pos.y/4+')');
+
 
   points = svg2.selectAll('circle')
   .data(pca_hands)
@@ -127,20 +177,26 @@ var handy = svg.append("g")
   .attr("cx", xMap)
   .attr("cy", yMap)
   .attr('r', 4)
+  .style("fill", "white")
   .on('click', function(d, i) {
   handy
-    .attr("d", lineFn(hands[i]))
     .transition()
-    .duration(100);})
-  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + i), svg2.style("cursor", "pointer");})
+    .duration(1000)
+    .attr("d", lineFn(hands[i]));})
+
+  .on("mouseover", function(d, i){return tooltip.style("visibility", "visible").text("Hand: " + (i+1)), svg2.style("cursor", "pointer");})
   .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
   .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+
+    
 
   document.getElementById("button").addEventListener('click', function () {
     var input1 = document.getElementById("pcx").value;
     var input2 = document.getElementById("pcy").value;
     var pc = [input1,input2];
     var pca_hands = d3.zip(hand_pca_data[pc[0]-1],hand_pca_data[pc[1]-1]);
+
     xScale.domain([d3.min(pca_hands, function(d) { return d[0]-0.05; }),d3.max(pca_hands, function(d) { return d[0]; })]);
     yScale.domain([d3.min(pca_hands, function(d) { return d[1]-0.05; }), d3.max(pca_hands, function(d) { return d[1]; })]);
     svg2.selectAll('circle')
@@ -149,6 +205,20 @@ var handy = svg.append("g")
         .duration(1000)
         .attr("cx", xMap)
         .attr("cy", yMap);
+
+var scaledX = pca_hands.map(function(d){return xMap(d);}) 
+var scaledY = pca_hands.map(function(d){return yMap(d);}) 
+
+var scaleD  = d3.zip(scaledX, scaledY)
+
+var clusters = clusterfck.kmeans(scaleD, 3);
+console.log(clusters)
+
+d3.select("path")
+  .data(clusters[2])
+  .transition()
+  .duration(1000)
+
 
     svg2.select(".x_axis")
         .transition()
@@ -163,6 +233,7 @@ var handy = svg.append("g")
         .call(yAxis);
     svg2.select(".ylabel")
         .text("PC"+pc[1]);
+
 });
 });
 });
