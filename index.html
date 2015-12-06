@@ -31,7 +31,7 @@
 <p>It is also interesting to see which points have similar values and can be naturally grouped together. This can be done by analysing the graph by eye, or using statistical clustering methods. In this case, K-means clustering was used to identify points, or hands, are similar to each other. K-means clustering partitions n observations into k clusters, aiming to minimise the variance between each cluster. The mathematical techniques this employees can be read in more detail <a href = "https://en.wikipedia.org/wiki/K-means_clustering" > here. </a></p>
 <h1 id = "instructions">Visualisation Instructions</h1>
 <p>
-Use the blow visualisation to gain a better understanding of PCA. The graph shows the first two principle components plotted against one another. Using the input on the left, you can change which components are displayed to visualise the variance between different components. Once you have chosen which components you would like to visualise, by clicking the plotted points, the hand on the right will update with the corresponding hand. 
+Use the below visualisation to gain a better understanding of PCA. The graph shows the first two principle components plotted against one another. Using the input on the left, you can change which components are displayed to visualise the variance between different components. Once you have chosen which components you would like to visualise, by clicking the plotted points, the hand on the right will update with the corresponding hand. 
 
 In order to facilitate the analysis of the points, and to identify clusters, you can use K-Means clustering by selecting a k value (number of clusters) and clicking “add clusters”. Please note, clusters of size 2 and below will not be visualised. 
 
@@ -42,7 +42,8 @@ If you find text hightlighted in red at any part of the webpage, by hovering ove
     <p>PC
       <input id="pcx" value="1" />
         PC
-      <input id="pcy" value="2" /><input type="button" value="Update PCA" id="button">
+      <input id="pcy" value="2" /><input type="button" value="Update PCA" id="button"> 
+                        
       Generate cluster with k=<input id="km" value="3" /><input type="button" value="Add clusters" id="button1">
     </p>
       <p>
@@ -68,7 +69,7 @@ In this particular dataset as the variance is limited by the movement of the han
       <h2 id = "cont">Contributors</h2>
       <p>
         The contributors of this project were:
-        <li>Jose Juan Almagros</li>
+        <li>Jose Juan Almagro Armenteros</li>
            <ul><li type="circle">Support changing which two PCA-variables are displayed in panel two (preferably with a nice transition).
           </li>
             <li type="circle">Display multiple hand-outlines and highlight the corresponding PCA-coordinates when one is selected
