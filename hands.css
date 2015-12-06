@@ -34,6 +34,13 @@ body {
     margin-left: 10%;
     margin-right: 15%;
     background-color: white;
+    text-align: justify;
+
+}
+
+#discuss {
+    margin-top = 20px
+}
 }
 #plot {
     font-family: Helvetica;
